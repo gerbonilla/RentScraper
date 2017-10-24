@@ -21,7 +21,6 @@ page_numbers.times do |page|
   address_container = element.children[2]
   address_link = address_container.children[1]
   address = address_link.children[0].children.text
-
   # rent
   info_container = element.children[3].children[1]
   rent = info_container.children[0].children[0].children[0].text
@@ -56,9 +55,14 @@ page_numbers.times do |page|
   # tags
   tags=[]
   element.css('li').each {|tag| tags << tag.text }
-
-  Flat.create!(description: description, address: address, rent_cents: rent, size: size, rooms: rooms, source: source, source_id: source_id, tags: tags)
-  puts "Flat Created #{rent}"
+  if Flat.where(source_id: source_id).blank?
+    f = Flat.create!(description: description, address: address, rent_cents: rent, size: size, rooms: rooms, source: source, source_id: source_id, tags: tags)
+    Rent.create!(flat: f, rent_cents: rent, date: Date.today())
+    puts "Flat & Rent Created #{rent}"
+  else
+    Rent.create!(flat: Flat.where(source_id: source_id)[0], rent_cents: rent, date: Date.today())
+    puts "Rent Created #{rent}"
+  end
 rescue
   puts "there was an error and could not save the flat"
 end

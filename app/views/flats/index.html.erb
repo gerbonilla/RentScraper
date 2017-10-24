@@ -1,2 +1,13 @@
-<h1>Flats#index</h1>
-<p>Find me in app/views/flats/index.html.erb</p>
+<h1>Flats</h1>
+<% @flats.each do |flat| %>
+  <div class="product">
+    <div class='product-upvote'>
+      <div class="product-arrow"></div>
+      <div class='product-count'>0</div>
+    </div>
+    <div class='product-body'>
+      <h3><%= flat.rent_cents / 100 %> - <%= flat.address %></h3>
+      <p><%= flat.description %></p>
+    </div>
+  </div>
+<% end %>
